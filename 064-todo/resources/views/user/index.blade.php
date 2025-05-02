@@ -10,11 +10,52 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="relative overflow-x-auto">
-                    <form method="GET" action="{{ route('user.index') }}" class="mb-4 px-6">
+                    <div class="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
+                    <div class="px-6 pt-4 pb-2">
+                        @if (request('search'))
+                        <h2 class="text-xl font-semibold text-white mb-2">
+                            Search results for : <span class="font-bold">{{ request('search') }}</span>
+                        </h2>
+                        @endif
+
+                        <form class="flex items-center gap-4 mb-4">
+                            <x-text-input id="search" name="search" type="text" class="w-100"
+                                placeholder="Search by name or email ..." value="{{ request('search') }}" autofocus />
+                            <x-primary-button type="submit">
+                                {{ __('Search') }}
+                            </x-primary-button>
+                        </form>
+
+                    </div>
+
+                    <div class="px-6 text-xl text-gray-900 dark:text-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div></div>
+
+                            <div>
+                                @if (session('success'))
+                                <p x-data="{ show: true }" x-show="show" x-transition
+                                    x-init="setTimeout(() => show = false, 5000)"
+                                    class="pb-3 text-sm text-green-600 dark:text-green-400">
+                                    {{ session('success') }}
+                                </p>
+                                @endif
+
+                                @if (session('danger'))
+                                <p x-data="{ show: true }" x-show="show" x-transition
+                                    x-init="setTimeout(() => show = false, 5000)"
+                                    class="pb-3 text-sm text-red-600 dark:text-red-400">
+                                    {{ session('danger') }}
+                                </p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <form method="GET" action="{{ route('user.index') }}" class="mb-4 px-6">
                         <input type="text" name="search" placeholder="Cari nama atau email..."
                             value="{{ request('search') }}"
                             class="w-full md:w-1/3 px-4 py-2 rounded-lg border border-gray-300 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    </form>
+                    </form> -->
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -44,7 +85,6 @@
                                                 <span class="text-green-600 dark:text-green-400">
                                                     ({{ $data->todos->where('is_done', true)->count() }}
                                                 </span>
-                                                /
                                                 <span class="text-blue-600 dark:text-blue-400">
                                                     {{ $data->todos->where('is_done', false)->count() }})
                                                 </span>
@@ -53,7 +93,37 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <!-- Action buttons can go here -->
-                                    </td>
+                                        <div class="flex space-x-3">
+                                            {{-- Action here --}}
+                                            @if ($data->is_admin)
+                                                <form action="{{ route('user.removeadmin', $data) }}" method="Post">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit"
+                                                        class="text-blue-600 dark:text-blue-400 whitespace-nowrap">
+                                                        Remove Admin
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('user.makeadmin', $data) }}" method="Post">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit"
+                                                        class="text-red-600 dark:text-red-400 whitespace-nowrap">
+                                                        Make Admin
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            <form action="{{ route('user.destroy', $data) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="text-red-600 dark:text-red-400 whitespace-nowrap">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                   </td>
                                 </tr>
                             @empty
                                 <tr class="odd:bg-white odd:dark:bg-gray-800 even:bg-gray-50 even:dark:bg-gray-700">
