@@ -13,6 +13,7 @@ class Todo extends Model
         'title',
         'user_id',
         'description',
+        'category_id',
         'is_done',
     ];
 
@@ -20,4 +21,10 @@ class Todo extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
 }

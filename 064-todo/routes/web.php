@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/todo/{todo}/update', [TodoController::class, 'update'])->name('todo.update');
     Route::delete('/todo/{todo}', [TodoController::class, 'destroy'])->name('todo.destroy');
     Route::delete('/todo', [TodoController::class, 'deldestroyCompleted'])->name('todo.deleteallcompleted');
+
+    Route::resource('category', CategoryController::class)->only(['index', 'create', 'store', 'destroy']);
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
