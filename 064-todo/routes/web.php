@@ -37,7 +37,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/todo/{todo}', [TodoController::class, 'destroy'])->name('todo.destroy');
     Route::delete('/todo', [TodoController::class, 'deldestroyCompleted'])->name('todo.deleteallcompleted');
 
-    Route::resource('category', CategoryController::class)->only(['index', 'create', 'store', 'destroy']);
+    Route::resource('category', CategoryController::class)->only([
+        'index', 'create', 'edit', 'store', 'destroy', 'update' // tambahkan 'update'
+    ]);
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
