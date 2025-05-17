@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 
 
 class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::withCount('todos')->get();
+        $categories = Category::with('todos')->where('user_id', Auth::id())->get();
         return view('category.index', compact('categories'));
     }
 
@@ -35,8 +36,11 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-
-        return view('category.edit', compact('category'));
+        if (Auth::id() == $category->user_id) {
+            return view('category.edit', compact('category'));
+        } else {
+            return redirect()->route('category.index')->with('danger', 'You are not authorized to edit this category!');
+        }
     }
 
     public function update(Request $request, Category $category)
@@ -57,8 +61,12 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        $category->delete();
-        return redirect()->route('category.index')->with('danger', 'Category deleted.');
+       if (Auth::id() == $category->user_id) {
+            $category->delete();
+            return redirect()->route('category.index')->with('success', 'Category deleted successfully!');
+        } else {
+            return redirect()->route('category.index')->with('danger', 'You are not authorized to delete this category!');
+        }
     }
 }
 

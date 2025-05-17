@@ -13,6 +13,7 @@ class TodoController extends Controller
     {
         $todos = Todo::with('category') 
                       -> where('user_id', Auth::id())
+                      ->orderBy('is_done', 'asc')
                      ->orderBy('created_at', 'desc')
                      ->get();
 

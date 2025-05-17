@@ -48,4 +48,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::patch('/user/{user}/removeadmin', [UserController::class, 'removeadmin'])->name('user.removeadmin');
 });
 
+Route::get('/pzn', function () {
+    return view('Hello Programer jaman now');
+});
 require __DIR__.'/auth.php';

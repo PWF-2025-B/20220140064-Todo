@@ -40,7 +40,9 @@
                                             {{ $category->title }}
                                         </a>
                                     </td>
-                                    <td class="px-6 py-4">{{ $category->todos_count }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
+                                        {{ $category->todos->count() }}
+                                    </td>
                                     <td class="px-6 py-4">
                                         <form action="{{ route('category.destroy', $category) }}" method="POST" onsubmit="return confirm('Are you sure?')">
                                             @csrf
