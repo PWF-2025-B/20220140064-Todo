@@ -37,6 +37,15 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory(10)->create();
+        $defaultTitles = ['Category 1', 'Category 2', 'Category 3'];
+        foreach (\App\Models\User::all() as $user) {
+            foreach ($defaultTitles as $title) {
+                \App\Models\Category::create([
+                    'title' => $title,
+                    'user_id' => $user->id,
+                ]);
+            }
+        }
         Todo::factory(20)->create();
     }
 }
